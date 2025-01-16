@@ -1,5 +1,5 @@
-const {Schema, Mongoose} = require("mongoose")
-
+const {Schema, model} = require("mongoose")
+const {createHmac, randomBytes} = require("crypto")
 
 const userSchema = new Schema({
     userName:{
@@ -21,6 +21,30 @@ const userSchema = new Schema({
     },
     profileImageUrl:{
         type: String,
-        default:"https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.anyrgb.com%2Fen-clipart-hf1gy&psig=AOvVaw2lnzz7TLXtGj9PRvhOc2vS&ust=1737135941685000&source=images&cd=vfe&opi=89978449&ved=0CBQQjRxqFwoTCMCL1enl-ooDFQAAAAAdAAAAABAE"
+        default:"/image/default.png" 
+    },
+    role:{
+        type: String,
+        enum: ["ADMIN", "USER"],
+        default: "USER"
     }
 }, {timestamps: true})
+
+
+userSchema.pre("save",function (next){
+    const user = this
+
+    if(!user.isModified("password")) return
+
+    const salt = randomBytes(16).toString()
+    const hashedPassword = createHmac('sha256', salt).update(user.password).digest('hex')
+    this.salt = salt
+    this.password = hashedPassword
+
+    next()
+
+})
+
+const User = model("User", userSchema)
+
+module.exports = User
