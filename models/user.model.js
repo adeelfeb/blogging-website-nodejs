@@ -1,50 +1,47 @@
-const {Schema, model} = require("mongoose")
-const {createHmac, randomBytes} = require("crypto")
+const mongoose = require("mongoose");
+const bcrypt = require("bcrypt");
 
-const userSchema = new Schema({
-    userName:{
-        type: String,
-        required: true
-    },
-    email:{
-        type:String,
-        required: true,
-        unique: true
-    },
-    password:{
-        type: String,
-        required: true,
-    },
-    salt:{
-        type: String,
-        required: true,
-    },
-    profileImageUrl:{
-        type: String,
-        default:"/image/default.png" 
-    },
-    role:{
-        type: String,
-        enum: ["ADMIN", "USER"],
-        default: "USER"
-    }
-}, {timestamps: true})
+const userSchema = new mongoose.Schema({
+  userName: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
+  salt: { type: String }, // Salt is required
+});
 
+// Pre-save middleware to hash password and generate salt
+userSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) return next();
 
-userSchema.pre("save",function (next){
-    const user = this
+  try {
+    // Generate salt
+    this.salt = await bcrypt.genSalt(10);
 
-    if(!user.isModified("password")) return
+    // Hash password with salt
+    this.password = await bcrypt.hash(this.password, this.salt);
+    next();
+  } catch (error) {
+    next(error);
+  }
+});
 
-    const salt = randomBytes(16).toString()
-    const hashedPassword = createHmac('sha256', salt).update(user.password).digest('hex')
-    this.salt = salt
-    this.password = hashedPassword
+// Static method to match password
+userSchema.static("matchPassword", async function (email, password) {
+  const user = await this.findOne({ email }); // Find the user by email
+  if (!user) return false;
 
-    next()
+  // Compare provided password with stored hashed password
+  const isMatch = await bcrypt.compare(password, user.password);
+  return isMatch ? user : false; // Return the user object if match, else false
+});
 
-})
+// Method to exclude sensitive fields from user data
+userSchema.methods.toJSON = function () {
+  const userObject = this.toObject();
+  delete userObject.password; // Remove password
+  delete userObject.salt;     // Remove salt
+  return userObject;          // Return the sanitized object
+};
 
-const User = model("User", userSchema)
+const User = mongoose.model("User", userSchema);
 
-module.exports = User
+module.exports = User;
