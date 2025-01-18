@@ -5,7 +5,9 @@ const cors = require("cors")
 const bodyParser = require('body-parser');
 const config = require('./config');
 const userRouter = require("./routes/user.route")
-const mongoose = require("mongoose")
+const cookieParser = require("cookie-parser")
+const mongoose = require("mongoose");
+const { checkForAuthenticationCookie } = require("./middleware/authentication");
 
 
 const app = express()
@@ -16,6 +18,8 @@ app.set("view engine", "ejs")
 app.set("views", path.resolve("./views"))
 
 // Middleware
+app.use(cookieParser())
+app.use(checkForAuthenticationCookie('token'))
 app.use(cors()); // Enable Cross-Origin Resource Sharing
 app.use(morgan('dev')); // Log HTTP requests to the console
 app.use(bodyParser.json()); // Parse JSON bodies
@@ -23,7 +27,9 @@ app.use(bodyParser.urlencoded({ extended: false })); // Parse URL-encoded bodies
 
 app.get("/", (req, res)=>{
     
-    return res.render("home")
+    return res.render("home", {
+        user: req.user
+    })
 })
 
 app.use("/", userRouter)

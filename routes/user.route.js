@@ -3,7 +3,6 @@ const router = express.Router();
 const User = require("../models/user.model")
 
 
-
 router.get("/login", (req, res)=>{
     return res.render("login")
 })
@@ -16,16 +15,19 @@ router.post("/login", async (req, res) => {
     const { email, password } = req.body;
   
     try {
-      const user = await User.matchPassword(email, password);
-  
-      if (!user) {
-        return res.status(401).send("Invalid email or password");
+      const token = await User.matchPasswordAndGenerateToken(email, password);
+      if (!token) {
+        
+        return res.render("login", {
+        error: "Incorrect email or Password"
+      })
       }
-  
-      res.status(200).send(`Welcome ${user.userName}`);
+      return res.cookie("token", token).redirect("/")
     } catch (error) {
       console.error("Error during login:", error);
-      res.status(500).send("Server error");
+      return res.render("login", {
+        error: "Incorrect email or Password"
+      })
     }
   });
 

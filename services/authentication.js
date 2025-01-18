@@ -5,7 +5,7 @@ const secret = config.JWT_SECRET;
 
 function createTokenForUser(user) {
     // Validate user object
-    if (!user || !user._id || !user.email || !user.role) {
+    if (!user || !user._id || !user.email || !user.userName || !user.role) {
         throw new Error("Invalid user object. Ensure _id, email, and role are provided.");
     }
 
@@ -13,7 +13,8 @@ function createTokenForUser(user) {
         _id: user._id,
         email: user.email,
         profileImageUrl: user.profileImageUrl || "", // Optional field
-        role: user.role,
+        userName: user.userName,
+        role: user.role
     };
 
     try {
