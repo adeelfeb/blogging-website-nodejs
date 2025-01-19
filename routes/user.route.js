@@ -63,7 +63,7 @@ router.post("/signup", async (req, res) => {
 
     await newUser.save(); // Save user to the database
 
-    res.status(201).send("User created successfully!");
+    res.render("login");
   } catch (error) {
     console.error("Error creating user:", error);
     res.status(500).send("An error occurred while signing up.");
