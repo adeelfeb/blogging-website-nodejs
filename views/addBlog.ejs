@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <%- include('./partials/head') %>
+    <title>Blog-Page</title>
+    <style>
+      /* Custom styles to enhance the form */
+      body {
+        background-color: #f8f9fa; /* Light gray background */
+        font-family: "Arial", sans-serif;
+      }
+
+      .form-container {
+        background-color: #ffffff; /* White background for form */
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        margin-top: 50px;
+      }
+
+      .form-label {
+        font-weight: bold;
+        color: #495057; /* Bootstrap text-secondary color */
+      }
+
+      .form-control {
+        border: 2px solid #ced4da; /* Slightly thicker border */
+        border-radius: 8px;
+        transition: border-color 0.3s ease-in-out;
+      }
+
+      .form-control:focus {
+        border-color: #007bff; /* Bootstrap primary color */
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+      }
+
+      .btn-submit {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        transition: background-color 0.3s ease-in-out;
+      }
+
+      .btn-submit:hover {
+        background-color: #0056b3;
+      }
+
+      /* Style for the file input */
+      .form-file {
+        padding: 10px;
+        border-radius: 8px;
+      }
+    </style>
+  </head>
+  <body>
+    <%- include('./partials/navbar') %>
+
+    <div class="container mt-3">
+      <div class="form-container">
+        <form action="/blog" method="post" enctype="multipart/form-data">
+          <!-- Title -->
+          <div class="mb-3">
+            <label for="title" class="form-label">Title</label>
+            <input
+              type="text"
+              id="title"
+              class="form-control"
+              name="title"
+              placeholder="Enter the title of your blog"
+            />
+          </div>
+
+          <!-- Body Text Area -->
+          <div class="mb-3">
+            <label for="BlogBody" class="form-label">Body</label>
+            <textarea
+              class="form-control"
+              placeholder="Write your blog content here..."
+              id="BlogBody"
+              name="BlogBody"
+              style="height: 150px"
+            ></textarea>
+          </div>
+
+          <!-- Cover Image Upload -->
+          <div class="mb-3">
+            <label for="coverImage" class="form-label">Cover Image</label>
+            <input
+              type="file"
+              id="coverImage"
+              class="form-control form-file"
+              name="coverImage"
+            />
+          </div>
+
+          <!-- Submit Button -->
+          <button type="submit" class="btn-submit">Submit</button>
+        </form>
+      </div>
+    </div>
+
+    <%- include('./partials/script') %>
+  </body>
+</html>

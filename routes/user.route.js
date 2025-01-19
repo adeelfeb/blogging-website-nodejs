@@ -12,24 +12,30 @@ router.get("/signup", (req, res)=>{
 })
 
 router.post("/login", async (req, res) => {
-    const { email, password } = req.body;
-  
-    try {
-      const token = await User.matchPasswordAndGenerateToken(email, password);
-      if (!token) {
-        
-        return res.render("login", {
-        error: "Incorrect email or Password"
-      })
-      }
-      return res.cookie("token", token).redirect("/")
-    } catch (error) {
-      console.error("Error during login:", error);
+  const { email, password } = req.body;
+
+  try {
+    const token = await User.matchPasswordAndGenerateToken(email, password);
+    if (!token) {
       return res.render("login", {
-        error: "Incorrect email or Password"
-      })
+        error: "Incorrect email or Password",
+      });
     }
-  });
+
+    res.cookie("token", token, { httpOnly: true }); // Set only the token as the cookie
+    return res.redirect("/");
+  } catch (error) {
+    console.error("Error during login:", error);
+    return res.render("login", {
+      error: "Incorrect email or Password",
+    });
+  }
+});
+
+
+router.get("/logout", async(req, res)=>{
+  res.clearCookie('token').redirect("/")
+})
 
 
 

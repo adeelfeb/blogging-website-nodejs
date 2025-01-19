@@ -4,9 +4,9 @@ const config = require("../config");
 const secret = config.JWT_SECRET;
 
 function createTokenForUser(user) {
-    // Validate user object
     if (!user || !user._id || !user.email || !user.userName || !user.role) {
-        throw new Error("Invalid user object. Ensure _id, email, and role are provided.");
+        console.warn("User object is incomplete. Token creation skipped.");
+        return null; // Return `null` if validation fails instead of throwing an error
     }
 
     const payload = {
@@ -18,13 +18,14 @@ function createTokenForUser(user) {
     };
 
     try {
-        // Add expiration time to the token
-        const token = jwt.sign(payload, secret, { expiresIn: "1h" }); // 1 hour expiration
+        const token = jwt.sign(payload, secret, { expiresIn: "5h" });
         return token;
     } catch (error) {
-        throw new Error("Failed to create token. Please check the secret and payload.");
+        console.error("Failed to create token:", error.message);
+        return null; // Return `null` in case of a token generation failure
     }
 }
+
 
 function validateToken(token) {
     if (!token) {
