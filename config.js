@@ -7,6 +7,7 @@ const config = {
     JWT_SECRET: process.env.JWT_SECRET, // Secret key for JSON Web Token
     NODE_ENV: process.env.NODE_ENV || 'development', // Default to 'development' if not set
     API_KEY: process.env.API_KEY, // Example for an API key
+    MONGODB_URL: process.env.MONGODB_URL
 };
 
 module.exports = config;
