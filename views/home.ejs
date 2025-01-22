@@ -28,9 +28,13 @@
       }
 
       .card-body {
-        padding: 20px;
-        flex-grow: 1;
-      }
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center children horizontally */
+  justify-content: center; /* Center children vertically (optional) */
+}
+
+
 
       .card img {
         border-top-left-radius: 10px;
@@ -79,21 +83,43 @@
       }
 
       .btn-primary {
-        background-color: #007bff;
+        background-color: #00f0f0;
         border: none;
         padding: 10px 20px;
         font-size: 1rem;
         text-transform: uppercase;
         border-radius: 5px;
         cursor: pointer;
-        align-self: flex-start; /* Align button to the left */
+        align-self:center; /* Align button to the left */
         margin-top: 10px;
+        flex: content;
+        justify-content: center;
       }
 
       .btn-primary:hover {
-        background-color: #0056b3;
+        background-color: rgb(0, 199, 182);
+      }
+      .login-buttons a {
+        display: inline-block;
+        background-color: #007bff;
+        color: white;
+        padding: 10px 20px;
+        margin: 10px;
+        border-radius: 5px;
+        text-decoration: none;
+        font-size: 1rem;
+        text-transform: uppercase;
+        transition: background-color 0.3s ease, transform 0.3s ease;
       }
 
+      .login-buttons a:hover {
+        background-color: #0056b3;
+        transform: scale(1.1);
+      }
+      .heroContainer {
+        margin-top: 50px;
+        text-align: center;
+      }
       /* Responsive adjustments */
       @media (max-width: 1200px) {
         .container {
@@ -117,7 +143,7 @@
   <body>
     <%- include('./partials/navbar') %> <% if (user) { %>
     <div class="container">
-      <% blogs.forEach(blog => { %>
+      <% if (blogs.length > 0) { %> <% blogs.forEach(blog => { %>
       <div class="card">
         <img
           src="<%= blog.coverImageUrl %>"
@@ -136,19 +162,81 @@
               alt="<%= blog.createdBy.role %>"
             />
             <span
-              >Created by: <%= blog.createdBy.userName %> (<%=
-              blog.createdBy.role %>)</span
+              >Created by: <%= blog.createdBy.userName %> </span
             >
           </div>
         </div>
       </div>
-      <% }) %>
+      <% }) %> <% } else { %>
+      <div
+        class="no-blogs"
+        style="
+          text-align: center;
+          background-color: #f9f9f9;
+          padding: 20px;
+          border-radius: 10px;
+        "
+      >
+        <h2
+          style="
+            font-size: 1.5rem;
+            flex: content;
+            justify-content: center;
+            text-align: center;
+            color: #555;
+          "
+        >
+          No blogs available! 📝
+        </h2>
+        <p style="font-size: 1rem; color: #777; margin: 10px 0">
+          Create your first blog now and share your thoughts with the world!
+          🌟✨
+        </p>
+        <a
+          href="/blog/add-new"
+          class="btn btn-primary"
+          style="display: inline-block; margin-top: 10px"
+          >Create Blog</a
+        >
+      </div>
+      <% } %>
     </div>
     <% } else { %>
-    <h1>Welcome to the Blogging Website!</h1>
-    <p>
-      <a href="/login">Login</a> or <a href="/signup">Signup</a> to get started.
-    </p>
+        <div class="heroContainer">
+            <h1>🌟 Welcome to the Blogging Website!</h1>
+            <p>📚 Share your thoughts, ideas, and experiences with the world.</p>
+            
+            <div
+              style="
+                max-width: 800px;
+                margin: 50px auto;
+                padding: 20px;
+                background: linear-gradient(135deg, #f0f8ff, #e6f7ff);
+                border-radius: 20px;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+                text-align: center;
+                font-family: 'Arial', sans-serif;
+                line-height: 1.6;
+              "
+            >
+              <h1 style="font-size: 2rem; margin-bottom: 15px">
+                🌟 Welcome to the Blogging Hub!
+              </h1>
+              <p style="font-size: 1.2rem; color: #555; margin-bottom: 20px">
+                🖋️ <strong>Express Yourself:</strong> Share your thoughts, ideas, and
+                stories with the world!<br />
+                📸 <strong>Visualize:</strong> Upload beautiful cover images to
+                captivate readers.<br />
+                🤝 <strong>Connect:</strong> Join a community of like-minded bloggers
+                and readers.<br />
+                🔐 <strong>Easy Access:</strong>
+                <div class="login-buttons">
+                  <a href="/login">🔐 Login</a>
+                  <a href="/signup">✍️ Signup</a>
+                </div> to get started!
+              </p>
+            </div>
+          </div>
     <% } %> <%- include('./partials/script') %>
   </body>
 </html>

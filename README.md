@@ -3,10 +3,18 @@
 This is a blogging website built using **Express**, **Mongoose**, **EJS**, and **Bootstrap**. It uses **server-side rendering (SSR)** to dynamically generate HTML pages based on data from a MongoDB database.
 
 
+## Screen-Record 
+
+**Watch the full screen recording of the working demo here:** [View Demo](https://drive.google.com/file/d/1F-F3TmhEPCo1A_sK8R0jRwE37WkojsBg/view?usp=sharing)  
+
+
 ## Screenshots
 
 ### Homepage
 ![Homepage Screenshot](./images/home.png)
+
+### All Blogs
+![All Blogs Screenshot](./images/ho.png)
 
 ### Add Blog Page
 ![Add Blog Page Screenshot](./images/addBlog.png)
